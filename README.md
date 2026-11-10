@@ -1,41 +1,61 @@
-# HOS Monthly Update Studio — Concordia International School Hanoi
+# HOS Monthly Update Studio
+**Concordia International School Hanoi**
 
-Công cụ thiết kế và sắp xếp bản tin **Head of School (HOS) Monthly Update** theo thứ tự ưu tiên chuẩn học đường, hỗ trợ dán trực tiếp từ Google Docs hoặc tải lên file `.docx`.
+A dedicated editorial publishing studio for designing, formatting, and generating beautiful, high-priority Head of School bulletins from Google Docs content.
 
-## Cách chạy trên máy Mac
+---
 
-Dự án đã được khởi chạy sẵn tại:
-- **URL**: `http://localhost:8080`
+## 🌟 Key Features
 
-Nếu muốn khởi động lại server bất kỳ lúc nào:
+1. **Smart Google Docs Importer**:
+   - Paste directly from Google Docs or upload `.docx` files.
+   - Preserves tables, links, bold/italic text, and inline images.
+2. **Priority-First Auto Sorting**:
+   - Automatically re-orders incoming sections by custom priority:
+     - 📌 Major Calendar / Key Events
+     - 🎓 Professional Development & Academic Focus
+     - 👥 Personnel & Staff Updates
+     - 🚌 Campus Operations & Bus Duty
+     - 🎂 Community Birthdays
+     - 💬 Questions & Responses
+     - ✝️ Devotion Sign-ups
+     - 📚 Archives / Past Issues Index (always docked at the bottom)
+   - Supports drag-and-drop manual re-ordering.
+3. **Bespoke Festive Themes & Vector Art**:
+   - **Concordia Editorial** (Official Forest Green & Warm Gold)
+   - **Christmas & Advent** (Subtle pine boughs, ornaments, winter motifs)
+   - **Tết Nguyên Đán** (Peach blossoms, apricot flowers, traditional patterns)
+   - **Easter & Spring** (Pastel botanical accents, festive eggs)
+   - **Autumn & Thanksgiving** (Warm amber, harvest leaves, subtle pumpkins)
+   - **Mid-Autumn Festival** (Full moon, lanterns, lotus motifs)
+4. **Interactive Editing & Link Tools**:
+   - Inline text link attachment tool (`[text](url)`).
+   - Dedicated Archive & Past Issues link manager (add, re-order, edit URLs).
+   - View Full mode for distraction-free reading.
+5. **1-Click Multi-Channel Export**:
+   - **Copy for Email (Gmail / Outlook)**: Generates 100% inline CSS table layout compatible with major email clients, automatically rasterizing SVGs to 2x Retina PNGs.
+   - **HTML Code Export**: Clean, standalone code.
+   - **Print / PDF**: Printer-friendly CSS stylesheet.
+
+---
+
+## 🚀 How to Run Locally
+
+No build tools or npm installation required. Run with any local HTTP server:
+
 ```bash
-cd /Users/quangvu/.gemini/antigravity/scratch/hos-update-studio
-python3 server.py 8080
+# Python 3
+cd hos-update-studio
+python3 -m http.server 8080
 ```
 
-## Tính năng chính
-1. **Dán trực tiếp từ Google Docs (`Cmd + V`) hoặc Upload `.docx`**:
-   - Giữ nguyên chữ in đậm/nghiêng, đường link Google Forms/Sheets/Docs, và bảng biểu (như bảng *Regional PD Opportunities*).
-2. **Tự động phân loại & sắp xếp theo Thứ Tự Ưu Tiên (Configurable Priority Rules)**:
-   - **Priority #1**: Major Calendar & Events (với Date Badges & phân loại sự kiện tự động).
-   - **Priority #2**: Key Events, PD & Spotlights (tự động nhận diện khung *Who / What / Where / When / Attire*, lịch trình *Program Schedule*, và bảng *PD Opportunities*).
-   - **Priority #3**: Personnel & Admin Updates (Contract dates, EARCOS Rep, Contact Forms, Admin Travel).
-   - **Priority #4**: Bus Duty & Campus Operations.
-   - **Priority #5**: Faculty & Staff Birthdays (hiển thị dạng lưới 2 cột trang trọng, hỗ trợ đổi `Last, First` sang `First Last`).
-   - **Priority #6**: Questions, Comments, Concerns & Prayer Requests (tách bạch phần Form ẩn danh và khung trả lời chính thức `Question` / `HOS Response`).
-   - **Priority #7**: Devotions Sign-ups.
-   - **Priority #8**: HOS Update Archive (luôn ghim ở cuối bản tin dưới dạng các thẻ tài liệu gọn gàng).
-3. **Smart CTA Synthesizer**:
-   - Tự động chuyển các link ẩn trong chữ `"here"`, `"form"`, `"RSVP"` thành nút bấm Call-To-Action rõ nghĩa (ví dụ: *Update Hanoi Contact Info*, *Local Emergency Contact Form*, *Sign Up to Lead Devotions*, *RSVP (by Nov. 13th)*).
-4. **Bộ 6 Themes Học Đường & Lễ Hội**:
-   - **Concordia Signature** (Xanh lá Concordia `#005a34`, Trắng & Vàng kim, kèm Banner chính thức của trường).
-   - **Christmas & Advent** (Giáng Sinh).
-   - **Tết Nguyên Đán** (Lunar New Year).
-   - **Easter & Spring Renewal** (Lễ Phục Sinh).
-   - **Autumn & Thanksgiving** (Mùa Thu / Lễ Tạ Ơn).
-   - **Mid-Autumn & International** (Tết Trung Thu).
-5. **Xuất bản 1-Click**:
-   - **Copy for Email (Gmail/Outlook)**: Tự động đóng gói HTML kèm Inline CSS tương thích 100% khi dán (`Cmd + V`) vào Gmail hoặc Outlook.
-   - **Copy HTML**: Lấy mã nguồn HTML.
-   - **Print / PDF**: Giao diện in và lưu file PDF sạch đẹp.
+Open your browser at `http://localhost:8080`.
 
+---
+
+## 🌐 Deploy to GitHub Pages (Free)
+
+1. Go to repository **Settings** > **Pages**.
+2. Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
+3. Select branch `main` and folder `/ (root)`.
+4. Click **Save**. Your site will be live at `https://tieuviem1355-sudo.github.io/weekly-update/` within 1 minute!
