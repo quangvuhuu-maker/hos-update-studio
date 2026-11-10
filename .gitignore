@@ -1,0 +1,10 @@
+# Dependencies & local binaries
+node_modules/
+bin/
+.DS_Store
+
+# Temporary files
+*.tmp
+*.log
+.firebase/
+.firebaserc

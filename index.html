@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOS Monthly Update Studio — Concordia International School Hanoi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f5f4;
+      color: #18221d;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    dialog::backdrop {
+      background: rgba(15, 23, 20, 0.45);
+      backdrop-filter: blur(2px);
+    }
+
+    dialog[open] {
+      animation: dialogFadeIn 0.16s ease-out;
+    }
+
+    @keyframes dialogFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #rich-paste-editor:empty::before {
+      content: attr(data-placeholder);
+      color: #94a3b8;
+      pointer-events: none;
+      display: block;
+    }
+
+    #print-only-mount {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+      }
+      #studio-app-shell,
+      #toast-container,
+      dialog {
+        display: none !important;
+      }
+      #print-only-mount {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <div id="print-only-mount"></div>
+  <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <div id="studio-app-shell" class="flex-1 flex flex-col min-h-screen">
+    <!-- Top Editorial Studio Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+      <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <!-- Brand Identity -->
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-[#005a34] flex items-center justify-center font-serif text-base text-white">
+            C
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-sm font-semibold tracking-tight text-slate-900">
+                HOS Update Editorial Studio
+              </h1>
+              <span class="text-[10px] font-medium uppercase tracking-widest px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                Concordia Hanoi
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            id="btn-open-paste-modal"
+            class="px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition cursor-pointer"
+          >
+            Paste Google Doc / Import .docx
+          </button>
+
+          <button
+            type="button"
+            id="btn-open-priority-modal"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
+          >
+            Priority Rules
+          </button>
+
+          <button
+            type="button"
+            id="btn-header-fullview"
+            class="px-3.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-medium text-xs transition cursor-pointer"
+            title="Toggle full-screen preview mode (Esc to exit)"
+          >
+            View Full
+          </button>
+
+          <div class="h-4 w-[1px] bg-slate-200 mx-1 hidden sm:block"></div>
+
+          <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded border border-slate-200">
+            <span class="text-[11px] text-slate-500 px-2">Issue:</span>
+            <button
+              type="button"
+              id="btn-sample-nov"
+              class="px-2.5 py-1 rounded-xs text-xs font-medium bg-white text-slate-800 shadow-2xs transition cursor-pointer"
+            >
+              Nov 10, 2026
+            </button>
+            <button
+              type="button"
+              id="btn-sample-sep"
+              class="px-2.5 py-1 rounded-xs text-xs font-medium text-slate-600 hover:text-slate-900 transition cursor-pointer"
+            >
+              Sept 2026
+            </button>
+          </div>
+        </div>
+
+        <!-- Export Controls -->
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="btn-copy-email"
+            class="px-4 py-1.5 rounded bg-[#005a34] hover:bg-[#004528] text-white font-medium text-xs transition cursor-pointer"
+          >
+            Copy for Email (Gmail / Outlook)
+          </button>
+          <button
+            type="button"
+            id="btn-copy-html"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
+          >
+            Copy HTML
+          </button>
+          <button
+            type="button"
+            id="btn-print-pdf"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
+          >
+            Print / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Palette / Seasonal Bar -->
+      <div class="bg-slate-50 border-t border-slate-200/80 px-4 sm:px-6 py-2">
+        <div class="max-w-[1600px] mx-auto flex items-center gap-2 overflow-x-auto">
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 shrink-0 mr-1">
+            Edition Theme
+          </span>
+          <div id="theme-selector-bar" class="flex items-center gap-1.5"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-[1600px] w-full mx-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 sm:p-6">
+      <!-- Left Column: Structure & Content -->
+      <aside id="editor-sidebar-col" class="lg:col-span-5 flex flex-col gap-4">
+        <section class="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+              Masthead &amp; Opening Note
+            </h2>
+            <div class="flex items-center gap-3 text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-600">
+                <input type="checkbox" id="toggle-concordia-banner" checked class="accent-[#005a34]" />
+                <span>Banner</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-600" title="Display names as 'First Last' instead of 'Last, First'">
+                <input type="checkbox" id="toggle-birthday-format" class="accent-[#005a34]" />
+                <span>First Last</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label for="input-newsletter-title" class="block text-xs font-medium text-slate-600 mb-1">
+              Publication Title
+            </label>
+            <input
+              type="text"
+              id="input-newsletter-title"
+              class="w-full px-3 py-1.5 text-sm font-medium text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+              placeholder="HOS Monthly Update - November 10, 2026"
+            />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="input-intro-note" class="text-xs font-medium text-slate-600">
+                Head of School Opening Note (Optional)
+              </label>
+              <button
+                type="button"
+                id="btn-ai-generate-intro"
+                class="text-[11px] font-medium text-[#005a34] hover:underline cursor-pointer"
+              >
+                Draft with AI
+              </button>
+            </div>
+            <textarea
+              id="input-intro-note"
+              rows="2"
+              class="w-full px-3 py-1.5 text-xs text-slate-800 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+              placeholder="Optional introductory paragraph from the Head of School..."
+            ></textarea>
+          </div>
+
+          <details class="group bg-slate-50 border border-slate-200 rounded px-3 py-2">
+            <summary class="text-xs font-medium text-slate-600 cursor-pointer flex items-center justify-between">
+              <span>Gemini API Configuration (Optional)</span>
+              <span class="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">&#9662;</span>
+            </summary>
+            <div class="mt-2.5 pt-2 border-t border-slate-200 space-y-2">
+              <div class="flex items-center gap-2">
+                <input
+                  type="password"
+                  id="input-gemini-key"
+                  placeholder="Gemini API Key (AIza...)"
+                  class="flex-1 px-2.5 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+                />
+                <button
+                  type="button"
+                  id="btn-ai-smart-classify"
+                  class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded cursor-pointer shrink-0"
+                >
+                  AI Classify
+                </button>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <!-- Section Outline -->
+        <section class="bg-white rounded-xl border border-slate-200 p-4 flex-1 flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                Editorial Outline (Priority Order)
+              </h2>
+              <span
+                id="blocks-count-badge"
+                class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600"
+              >
+                0 sections
+              </span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                id="btn-resort-priority"
+                class="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition cursor-pointer"
+              >
+                Re-sort by Priority
+              </button>
+              <button
+                type="button"
+                id="btn-add-block"
+                class="px-2.5 py-1 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded transition cursor-pointer"
+              >
+                + Add Section
+              </button>
+            </div>
+          </div>
+
+          <div id="blocks-list" class="space-y-2 overflow-y-auto max-h-[680px] pr-1"></div>
+        </section>
+      </aside>
+
+      <!-- Right Column: Live Publication Preview -->
+      <section id="preview-main-col" class="lg:col-span-7 flex flex-col bg-slate-100 rounded-xl border border-slate-200/90 overflow-hidden">
+        <!-- Full View Exit Banner (shown only when Full View is active) -->
+        <div
+          id="fullview-exit-bar"
+          class="hidden bg-slate-900 text-white px-4 py-2 flex items-center justify-between text-xs"
+        >
+          <span>Full-Screen Reading Mode Active — Press <strong>Esc</strong> at any time to return to Split Editor.</span>
+          <button
+            type="button"
+            id="btn-exit-fullview"
+            class="px-3 py-1 rounded bg-white text-slate-900 font-semibold hover:bg-slate-100 cursor-pointer"
+          >
+            Return to Split Editor
+          </button>
+        </div>
+
+        <div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+          <span class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+            Publication Preview (Email-Safe Inline Typography)
+          </span>
+
+          <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded">
+            <button
+              type="button"
+              data-preview-mode="desktop"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all bg-slate-900 text-white"
+            >
+              Split View
+            </button>
+            <button
+              type="button"
+              data-preview-mode="full"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
+            >
+              Full View
+            </button>
+            <button
+              type="button"
+              data-preview-mode="mobile"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
+            >
+              Mobile (420px)
+            </button>
+            <button
+              type="button"
+              data-preview-mode="html"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
+            >
+              HTML Source
+            </button>
+          </div>
+        </div>
+
+        <div class="flex-1 p-4 sm:p-6 overflow-y-auto flex justify-center">
+          <div id="preview-viewport-wrapper" class="w-full max-w-[720px] transition-all duration-200">
+            <div id="newsletter-preview-mount"></div>
+          </div>
+
+          <div id="preview-code-wrapper" class="hidden w-full max-w-[720px]">
+            <textarea
+              id="newsletter-html-code"
+              readonly
+              rows="32"
+              class="w-full p-4 font-mono text-xs bg-slate-900 text-emerald-300 rounded-lg border border-slate-700 focus:outline-none"
+            ></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL 1: Paste / Upload -->
+  <dialog
+    id="dialog-paste-import"
+    class="w-full max-w-3xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden"
+  >
+    <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold">Import Content from Google Docs or Word (.docx)</h3>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Preserves links, tables, and structure while applying clean editorial typography.
+        </p>
+      </div>
+      <button
+        type="button"
+        id="btn-close-paste-modal"
+        class="w-7 h-7 rounded bg-white/10 hover:bg-white/20 text-white text-xs cursor-pointer"
+        aria-label="Close modal"
+      >
+        &times;
+      </button>
+    </div>
+
+    <div class="p-6 space-y-4 bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-lg p-3.5">
+        <div class="text-xs text-slate-700">
+          <strong>Option A — Upload .docx file exported from Google Docs:</strong>
+          <div class="text-slate-500 mt-0.5">Extracts all paragraphs, tables, and hyperlinks directly.</div>
+        </div>
+        <label class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded cursor-pointer shrink-0">
+          Select .docx File
+          <input type="file" id="input-upload-docx" accept=".docx" class="hidden" />
+        </label>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-xs font-medium text-slate-700">
+            Option B — Copy (Cmd+A, Cmd+C) in Google Docs and Paste (Cmd+V) Below:
+          </label>
+          <span class="text-[11px] text-slate-400">Rich Text Clipboard</span>
+        </div>
+        <div
+          id="rich-paste-editor"
+          contenteditable="true"
+          data-placeholder="Click here and press Cmd + V to paste your HOS Monthly Update..."
+          class="w-full h-72 overflow-y-auto p-4 bg-slate-50 border border-slate-300 focus:border-[#005a34] focus:bg-white rounded-lg text-sm text-slate-800 focus:outline-none"
+        ></div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button
+          type="button"
+          onclick="document.getElementById('dialog-paste-import').close()"
+          class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-100 cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="btn-parse-pasted-content"
+          class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer"
+        >
+          Parse &amp; Arrange by Priority
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL 2: Priority Rules -->
+  <dialog
+    id="dialog-priority-settings"
+    class="w-full max-w-2xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden"
+  >
+    <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold">Priority Hierarchy Settings</h3>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Drag or reorder the default priority sequence for parsed sections.
+        </p>
+      </div>
+      <button
+        type="button"
+        id="btn-close-priority-modal"
+        class="w-7 h-7 rounded bg-white/10 hover:bg-white/20 text-white text-xs cursor-pointer"
+        aria-label="Close priority settings"
+      >
+        &times;
+      </button>
+    </div>
+
+    <div class="p-6 space-y-4 bg-slate-50">
+      <div id="priority-rules-list" class="space-y-1.5 max-h-[420px] overflow-y-auto pr-1"></div>
+
+      <div class="bg-white border border-slate-200 rounded-lg p-3.5 flex items-center justify-between">
+        <div>
+          <div class="text-xs font-semibold text-slate-800">Always Pin "HOS Update Archive" at Bottom</div>
+          <div class="text-[11px] text-slate-500">Keeps historical issue links at the colophon footer of the update.</div>
+        </div>
+        <input type="checkbox" id="checkbox-pin-archive" checked class="w-4 h-4 accent-[#005a34] cursor-pointer" />
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-200">
+        <button
+          type="button"
+          id="btn-reset-priority-defaults"
+          class="px-3 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+        >
+          Reset to Default
+        </button>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="document.getElementById('dialog-priority-settings').close()"
+            class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            id="btn-save-priority-settings"
+            class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer"
+          >
+            Save &amp; Apply Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import { initApp } from './src/app.js';
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

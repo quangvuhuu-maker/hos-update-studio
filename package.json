@@ -1,0 +1,12 @@
+{
+  "name": "hos-update-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Concordia International School Hanoi - Head of School Monthly Update Studio",
+  "scripts": {
+    "dev": "python3 server.py 8080",
+    "start": "python3 server.py 8080"
+  }
+}
+
