@@ -58,4 +58,4 @@ Open your browser at `http://localhost:8080`.
 1. Go to repository **Settings** > **Pages**.
 2. Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
 3. Select branch `main` and folder `/ (root)`.
-4. Click **Save**. Your site will be live at `https://tieuviem1355-sudo.github.io/weekly-update/` within 1 minute!
+4. Click **Save**. Your site will be live at `https://quangvuhuu-maker.github.io/hos-update-studio/` within 1 minute!
