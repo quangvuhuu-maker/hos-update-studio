@@ -46,10 +46,15 @@ function loadSavedCategoryOrder() {
     if (raw) {
       let savedIds = JSON.parse(raw);
       if (Array.isArray(savedIds) && savedIds.length > 0) {
-        // Upgrade legacy 'featured_events' into 'announcements' and 'professional_training'
+        // Upgrade legacy 'featured_events' into 'events', 'announcements' and 'professional_training'
         if (savedIds.includes('featured_events')) {
           const idx = savedIds.indexOf('featured_events');
-          savedIds.splice(idx, 1, 'announcements', 'professional_training');
+          savedIds.splice(idx, 1, 'events', 'announcements', 'professional_training');
+        }
+        // Upgrade legacy 'birthdays' into 'community_building'
+        if (savedIds.includes('birthdays')) {
+          const idx = savedIds.indexOf('birthdays');
+          savedIds.splice(idx, 1, 'community_building');
         }
         const ordered = [];
         for (const id of savedIds) {
@@ -105,6 +110,9 @@ function loadRawHtmlIntoStudio(rawHtml, defaultTitle = '') {
     if (b.category === 'featured_events') {
       b.category = classifyHeading(b.title);
       if (b.category === 'featured_events') b.category = 'announcements';
+    }
+    if (b.category === 'birthdays') {
+      b.category = 'community_building';
     }
   });
   state.blocks = sortBlocksByPriority(
@@ -603,7 +611,11 @@ function reprocessBlockParagraphs(block, rawLinesText) {
 
   if (block.category === 'calendar') {
     block.calendarEvents = parseCalendarItems(block.paragraphs);
-  } else if (block.category === 'birthdays') {
+  } else if (
+    block.category === 'birthdays' ||
+    /birthdays?\b/i.test(block.title) ||
+    (block.category === 'community_building' && /birthdays?\b/i.test(block.title))
+  ) {
     block.birthdayGroups = parseBirthdayItems(block.paragraphs, false);
   } else if (block.category === 'archive') {
     block.archiveItems = block.paragraphs.map((p) => ({
@@ -611,8 +623,10 @@ function reprocessBlockParagraphs(block, rawLinesText) {
       url: p.links?.[0]?.url || '',
     }));
   } else if (
+    block.category === 'events' ||
     block.category === 'announcements' ||
     block.category === 'professional_training' ||
+    block.category === 'community_building' ||
     block.category === 'featured_events' ||
     block.category === 'personnel'
   ) {
@@ -720,18 +734,19 @@ function bindBlockListEvents(listEl) {
 
       if (newCategory === 'calendar' && (!block.calendarEvents || block.calendarEvents.length === 0)) {
         block.calendarEvents = parseCalendarItems(block.paragraphs || []);
-      } else if (newCategory === 'birthdays' && (!block.birthdayGroups || block.birthdayGroups.length === 0)) {
-        block.birthdayGroups = parseBirthdayItems(block.paragraphs || [], false);
+      } else if (
+        newCategory === 'birthdays' ||
+        (newCategory === 'community_building' && /birthdays?\b/i.test(block.title))
+      ) {
+        if (!block.birthdayGroups || block.birthdayGroups.length === 0) {
+          block.birthdayGroups = parseBirthdayItems(block.paragraphs || [], false);
+        }
       } else if (newCategory === 'archive' && (!block.archiveItems || block.archiveItems.length === 0)) {
         block.archiveItems = (block.paragraphs || []).map((p) => ({
           title: p.text,
           url: p.links?.[0]?.url || '',
         }));
-      } else if (
-        newCategory === 'announcements' ||
-        newCategory === 'professional_training' ||
-        newCategory === 'personnel'
-      ) {
+      } else {
         block.bodyParagraphs = block.paragraphs;
       }
 

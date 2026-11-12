@@ -183,9 +183,6 @@ export function classifyHeading(headingText) {
   if (/^hos\s+(monthly\s+)?update\s+archive/i.test(h) || lower === 'archive' || lower === 'archives') {
     return 'archive';
   }
-  if (/^birthdays?\b/i.test(h)) {
-    return 'birthdays';
-  }
   if (/^calendar\b/i.test(h) || lower.includes('major events in the month') || lower.includes('major calendar')) {
     return 'calendar';
   }
@@ -227,6 +224,42 @@ export function classifyHeading(headingText) {
     /\bpd\b/i.test(h)
   ) {
     return 'professional_training';
+  }
+
+  // Community Building (Birthdays, Trivia Nights, Christmas/Staff parties, Social gatherings)
+  if (
+    /^birthdays?\b/i.test(h) ||
+    lower.includes('birthday') ||
+    lower.includes('trivia night') ||
+    lower.includes('christmas party') ||
+    lower.includes('staff & family') ||
+    lower.includes('staff party') ||
+    lower.includes('faculty party') ||
+    lower.includes('staff lunch') ||
+    lower.includes('happy hour') ||
+    lower.includes('potluck') ||
+    lower.includes('community building') ||
+    lower.includes('community milestone') ||
+    lower.includes('team building')
+  ) {
+    return 'community_building';
+  }
+
+  // Featured Campus Events (Fairs, runs, conferences, performances, tournaments)
+  if (
+    lower.includes('fair') ||
+    lower.includes('fun run') ||
+    lower.includes('carnival') ||
+    lower.includes('festival') ||
+    lower.includes('mun') ||
+    lower.includes('concert') ||
+    lower.includes('performance') ||
+    lower.includes('exhibition') ||
+    lower.includes('invitational') ||
+    lower.includes('tournament') ||
+    /\bevents?\b/i.test(h)
+  ) {
+    return 'events';
   }
 
   return 'announcements';
@@ -393,7 +426,11 @@ function enrichBlockStructure(block) {
 
   if (block.category === 'calendar') {
     block.calendarEvents = parseCalendarItems(block.paragraphs);
-  } else if (block.category === 'birthdays') {
+  } else if (
+    block.category === 'birthdays' ||
+    /birthdays?\b/i.test(block.title) ||
+    (block.category === 'community_building' && /birthdays?\b/i.test(block.title))
+  ) {
     block.birthdayGroups = parseBirthdayItems(block.paragraphs, false);
   } else if (block.category === 'archive') {
     block.archiveItems = block.paragraphs
@@ -436,8 +473,10 @@ function enrichBlockStructure(block) {
     block.qaIntro = introParagraphs;
     block.qaPairs = qaPairs;
   } else if (
+    block.category === 'events' ||
     block.category === 'announcements' ||
     block.category === 'professional_training' ||
+    block.category === 'community_building' ||
     block.category === 'featured_events' ||
     block.category === 'personnel'
   ) {
@@ -620,7 +659,7 @@ export function parseNewsletterHtml(rawHtmlInput) {
       // Check for parenthetical note in Birthdays heading: "BIRTHDAYS (if your Birthday is this month and not listed, please let Ha Le know)"
       const bdayMatch = info.normalizedText.match(/^BIRTHDAYS\s*\((.+)\)$/i);
       if (bdayMatch) {
-        startNewBlock('Faculty & Staff Birthdays', bdayMatch[1].trim(), 'birthdays');
+        startNewBlock('Faculty & Staff Birthdays', bdayMatch[1].trim(), 'community_building');
       } else if (/^CALENDAR\s*[-–—]\s*(.+)$/i.test(info.normalizedText)) {
         const calMatch = info.normalizedText.match(/^CALENDAR\s*[-–—]\s*(.+)$/i);
         startNewBlock('Major Calendar & Events', calMatch[1].trim(), 'calendar');

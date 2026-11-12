@@ -8,13 +8,15 @@ const SERIF_STACK = `Georgia, 'Times New Roman', Times, serif`;
 const SANS_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
 
 function getCategoryMeta(catId) {
-  const normalizedId = catId === 'featured_events' ? 'announcements' : catId;
+  let normalizedId = catId;
+  if (catId === 'featured_events') normalizedId = 'announcements';
+  if (catId === 'birthdays') normalizedId = 'community_building';
   return (
     DEFAULT_CATEGORIES.find((c) => c.id === normalizedId) || {
       id: catId,
-      label: 'Announcements',
-      kicker: 'ANNOUNCEMENTS & SPOTLIGHTS',
-      badgeText: 'Announcements',
+      label: 'Community Building',
+      kicker: 'COMMUNITY BUILDING',
+      badgeText: 'Community',
     }
   );
 }
@@ -519,7 +521,11 @@ export function renderNewsletterEmailHtml({
       if (block.category === 'calendar') {
         return renderCalendarSection(block, theme, kickerHtml);
       }
-      if (block.category === 'birthdays') {
+      if (
+        block.category === 'birthdays' ||
+        (block.birthdayGroups && block.birthdayGroups.length > 0) ||
+        (block.category === 'community_building' && /birthdays?\b/i.test(block.title))
+      ) {
         return renderBirthdaysSection(block, theme, formatBirthdayFirstLast, kickerHtml);
       }
       if (block.category === 'qa_concerns') {
