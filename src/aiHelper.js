@@ -55,7 +55,7 @@ export async function refineBlocksWithGemini(apiKey, blocks) {
 
   const prompt = `You are an executive assistant organizing the Head of School Monthly Update at Concordia International School Hanoi.
 For each block below, verify the best category from this exact allowed list:
-["calendar", "featured_events", "personnel", "bus_duty", "birthdays", "qa_concerns", "devotions", "archive"]
+["calendar", "announcements", "professional_training", "personnel", "bus_duty", "birthdays", "qa_concerns", "devotions", "archive"]
 Also provide a clean, concise, professional title if the current title is overly verbose or missing spacing.
 Return ONLY a valid JSON array of objects: [{"index": number, "category": string, "title": string}].
 

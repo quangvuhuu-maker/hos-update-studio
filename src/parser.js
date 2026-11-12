@@ -212,7 +212,24 @@ export function classifyHeading(headingText) {
     return 'personnel';
   }
 
-  return 'featured_events';
+  // Professional Training & Development
+  if (
+    lower.includes('professional development') ||
+    lower.includes('professional learning') ||
+    lower.includes('pd opportunit') ||
+    lower.includes('training') ||
+    lower.includes('certification') ||
+    lower.includes('workshop') ||
+    lower.includes('webinar') ||
+    lower.includes('course') ||
+    lower.includes('edtech') ||
+    lower.includes('learning opportunit') ||
+    /\bpd\b/i.test(h)
+  ) {
+    return 'professional_training';
+  }
+
+  return 'announcements';
 }
 
 /**
@@ -418,7 +435,12 @@ function enrichBlockStructure(block) {
     }
     block.qaIntro = introParagraphs;
     block.qaPairs = qaPairs;
-  } else if (block.category === 'featured_events' || block.category === 'personnel') {
+  } else if (
+    block.category === 'announcements' ||
+    block.category === 'professional_training' ||
+    block.category === 'featured_events' ||
+    block.category === 'personnel'
+  ) {
     // Detect structured event metadata (Who/What/Where/When/Why/Attire) and Program Schedule (5:30 ..., 6:00 ...)
     const metaSpecs = [];
     const scheduleItems = [];
@@ -547,7 +569,7 @@ export function parseNewsletterHtml(rawHtmlInput) {
   for (const item of elements) {
     if (item.type === 'table') {
       if (!currentBlock) {
-        startNewBlock('Featured Information', '', 'featured_events');
+        startNewBlock('Featured Information', '', 'announcements');
       }
       const rows = [];
       for (const tr of Array.from(item.node.querySelectorAll('tr'))) {
@@ -571,7 +593,7 @@ export function parseNewsletterHtml(rawHtmlInput) {
     // Collect any embedded images
     if (info.images && info.images.length > 0) {
       if (!currentBlock) {
-        startNewBlock('Featured Announcement', '', 'featured_events');
+        startNewBlock('Featured Announcement', '', 'announcements');
       }
       currentBlock.images.push(...info.images);
     }
@@ -610,7 +632,7 @@ export function parseNewsletterHtml(rawHtmlInput) {
 
     // Otherwise, append paragraph to currentBlock
     if (!currentBlock) {
-      startNewBlock('General Announcement', '', 'featured_events');
+      startNewBlock('General Announcement', '', 'announcements');
     }
 
     currentBlock.paragraphs.push({

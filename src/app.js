@@ -6,6 +6,7 @@ import {
   sortBlocksByPriority,
   parseCalendarItems,
   parseBirthdayItems,
+  classifyHeading,
 } from './parser.js';
 import { renderNewsletterEmailHtml } from './emailRenderer.js';
 import { convertSvgElementsToPngInContainer } from './seasonalArtwork.js';
@@ -43,12 +44,19 @@ function loadSavedCategoryOrder() {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CATEGORY_ORDER);
     if (raw) {
-      const savedIds = JSON.parse(raw);
+      let savedIds = JSON.parse(raw);
       if (Array.isArray(savedIds) && savedIds.length > 0) {
+        // Upgrade legacy 'featured_events' into 'announcements' and 'professional_training'
+        if (savedIds.includes('featured_events')) {
+          const idx = savedIds.indexOf('featured_events');
+          savedIds.splice(idx, 1, 'announcements', 'professional_training');
+        }
         const ordered = [];
         for (const id of savedIds) {
           const found = DEFAULT_CATEGORIES.find((c) => c.id === id);
-          if (found) ordered.push({ ...found });
+          if (found && !ordered.some((c) => c.id === found.id)) {
+            ordered.push({ ...found });
+          }
         }
         for (const def of DEFAULT_CATEGORIES) {
           if (!ordered.some((c) => c.id === def.id)) {
@@ -93,6 +101,12 @@ export function showToast(message, type = 'success') {
 function loadRawHtmlIntoStudio(rawHtml, defaultTitle = '') {
   const parsed = parseNewsletterHtml(rawHtml);
   state.newsletterTitle = parsed.newsletterTitle || defaultTitle || 'HOS Monthly Update';
+  (parsed.blocks || []).forEach((b) => {
+    if (b.category === 'featured_events') {
+      b.category = classifyHeading(b.title);
+      if (b.category === 'featured_events') b.category = 'announcements';
+    }
+  });
   state.blocks = sortBlocksByPriority(
     parsed.blocks,
     state.categoryOrder,
@@ -235,7 +249,16 @@ function renderBlocksList() {
       const bodyLinesText = formatParagraphsToMarkdown(block.paragraphs);
       const allExtractedLinks = (block.paragraphs || []).flatMap((p) => p.links || []);
 
-      const categoryOptions = state.categoryOrder
+      const inlineCategoryOptions = state.categoryOrder
+        .map(
+          (c, i) =>
+            `<option value="${c.id}" ${c.id === block.category ? 'selected' : ''}>0${
+              i + 1
+            } · ${c.badgeText}</option>`
+        )
+        .join('');
+
+      const editCategoryOptions = state.categoryOrder
         .map(
           (c, i) =>
             `<option value="${c.id}" ${c.id === block.category ? 'selected' : ''}>0${
@@ -339,9 +362,15 @@ function renderBlocksList() {
                 class="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 select-none text-xs font-mono"
                 title="Drag to reorder"
               >::</span>
-              <span class="shrink-0 text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
-                0${priorityRank} · ${catMeta.badgeText}
-              </span>
+              <div class="relative shrink-0" title="Chuyên mục: 0${priorityRank} · ${catMeta.badgeText} (Bấm để đổi chuyên mục)">
+                <select
+                  data-inline-category="${block.id}"
+                  class="appearance-none text-[10px] font-mono font-semibold uppercase tracking-wider pl-2 pr-4 py-0.5 rounded bg-slate-100 hover:bg-slate-200 focus:bg-white text-slate-700 border border-slate-200 hover:border-slate-300 focus:border-[#005a34] focus:outline-none cursor-pointer transition-colors shadow-xs"
+                >
+                  ${inlineCategoryOptions}
+                </select>
+                <span class="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 text-[8px]">▼</span>
+              </div>
               <button
                 type="button"
                 data-toggle-expand="${block.id}"
@@ -400,12 +429,12 @@ function renderBlocksList() {
                   />
                 </div>
                 <div>
-                  <label class="block text-[11px] font-medium text-slate-600 mb-1">Priority Group</label>
+                  <label class="block text-[11px] font-medium text-slate-600 mb-1">Category / Chuyên mục</label>
                   <select
                     data-edit-category="${block.id}"
-                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded font-medium text-slate-800 focus:outline-none focus:border-[#005a34]"
+                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded font-medium text-slate-800 focus:outline-none focus:border-[#005a34] cursor-pointer"
                   >
-                    ${categoryOptions}
+                    ${editCategoryOptions}
                   </select>
                 </div>
               </div>
@@ -581,7 +610,12 @@ function reprocessBlockParagraphs(block, rawLinesText) {
       title: p.text,
       url: p.links?.[0]?.url || '',
     }));
-  } else if (block.category === 'featured_events' || block.category === 'personnel') {
+  } else if (
+    block.category === 'announcements' ||
+    block.category === 'professional_training' ||
+    block.category === 'featured_events' ||
+    block.category === 'personnel'
+  ) {
     block.bodyParagraphs = block.paragraphs;
   }
 }
@@ -673,19 +707,50 @@ function bindBlockListEvents(listEl) {
     });
   });
 
-  listEl.querySelectorAll('[data-edit-category]').forEach((select) => {
-    select.addEventListener('change', () => {
-      const id = select.getAttribute('data-edit-category');
+  const handleCategorySelection = (select, isInline) => {
+    select.addEventListener('change', (e) => {
+      e.stopPropagation();
+      const id = select.getAttribute(isInline ? 'data-inline-category' : 'data-edit-category');
       const block = state.blocks.find((b) => b.id === id);
-      if (block) {
-        block.category = select.value;
-        reprocessBlockParagraphs(
-          block,
-          (block.paragraphs || []).map((p) => p.text).join('\n')
-        );
-        renderAll();
+      if (!block) return;
+      const newCategory = select.value;
+      if (block.category === newCategory) return;
+
+      block.category = newCategory;
+
+      if (newCategory === 'calendar' && (!block.calendarEvents || block.calendarEvents.length === 0)) {
+        block.calendarEvents = parseCalendarItems(block.paragraphs || []);
+      } else if (newCategory === 'birthdays' && (!block.birthdayGroups || block.birthdayGroups.length === 0)) {
+        block.birthdayGroups = parseBirthdayItems(block.paragraphs || [], false);
+      } else if (newCategory === 'archive' && (!block.archiveItems || block.archiveItems.length === 0)) {
+        block.archiveItems = (block.paragraphs || []).map((p) => ({
+          title: p.text,
+          url: p.links?.[0]?.url || '',
+        }));
+      } else if (
+        newCategory === 'announcements' ||
+        newCategory === 'professional_training' ||
+        newCategory === 'personnel'
+      ) {
+        block.bodyParagraphs = block.paragraphs;
       }
+
+      const catMeta =
+        state.categoryOrder.find((c) => c.id === newCategory) ||
+        DEFAULT_CATEGORIES.find((c) => c.id === newCategory);
+      const catLabel = catMeta ? (catMeta.viLabel || catMeta.label) : newCategory;
+
+      renderAll();
+      showToast(`Đã chuyển sang: ${catLabel}.`);
     });
+  };
+
+  listEl.querySelectorAll('[data-inline-category]').forEach((select) => {
+    handleCategorySelection(select, true);
+  });
+
+  listEl.querySelectorAll('[data-edit-category]').forEach((select) => {
+    handleCategorySelection(select, false);
   });
 
   listEl.querySelectorAll('[data-edit-body]').forEach((textarea) => {
@@ -1211,7 +1276,7 @@ export function initApp() {
       id: `block_${Date.now()}`,
       title: 'New Announcement',
       subtitle: '',
-      category: 'featured_events',
+      category: 'announcements',
       paragraphs: [
         {
           text: 'Enter announcement details here...',

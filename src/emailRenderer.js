@@ -8,11 +8,13 @@ const SERIF_STACK = `Georgia, 'Times New Roman', Times, serif`;
 const SANS_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
 
 function getCategoryMeta(catId) {
+  const normalizedId = catId === 'featured_events' ? 'announcements' : catId;
   return (
-    DEFAULT_CATEGORIES.find((c) => c.id === catId) || {
+    DEFAULT_CATEGORIES.find((c) => c.id === normalizedId) || {
       id: catId,
       label: 'Announcements',
-      kicker: 'ANNOUNCEMENTS',
+      kicker: 'ANNOUNCEMENTS & SPOTLIGHTS',
+      badgeText: 'Announcements',
     }
   );
 }
