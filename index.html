@@ -231,6 +231,52 @@
             ></textarea>
           </div>
 
+          <!-- Footer & Colophon Settings -->
+          <details class="group bg-slate-50 border border-slate-200 rounded px-3 py-2" id="details-footer-settings" open>
+            <summary class="text-xs font-semibold text-slate-700 cursor-pointer flex items-center justify-between select-none">
+              <span class="flex items-center gap-1.5">
+                <span>📍</span>
+                <span>Footer &amp; Address Information</span>
+              </span>
+              <span class="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">&#9662;</span>
+            </summary>
+            <div class="mt-2.5 pt-2 border-t border-slate-200 space-y-2 text-xs">
+              <div>
+                <label for="input-footer-org" class="block text-[11px] font-medium text-slate-600 mb-0.5">
+                  School / Organization Name
+                </label>
+                <input
+                  type="text"
+                  id="input-footer-org"
+                  class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+                  placeholder="Concordia International School Hanoi"
+                />
+              </div>
+              <div>
+                <label for="input-footer-address" class="block text-[11px] font-medium text-slate-600 mb-0.5">
+                  Campus Address (Địa chỉ trường - hỗ trợ nhiều dòng)
+                </label>
+                <textarea
+                  id="input-footer-address"
+                  rows="2"
+                  class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+                  placeholder="Van Tri Golf Compound, Tho Da, Kim No, Dong Anh, Hanoi, Vietnam"
+                ></textarea>
+              </div>
+              <div>
+                <label for="input-footer-note" class="block text-[11px] font-medium text-slate-600 mb-0.5">
+                  Footer Right Tagline
+                </label>
+                <input
+                  type="text"
+                  id="input-footer-note"
+                  class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
+                  placeholder="Faculty &amp; Staff Bulletin"
+                />
+              </div>
+            </div>
+          </details>
+
           <details class="group bg-slate-50 border border-slate-200 rounded px-3 py-2">
             <summary class="text-xs font-medium text-slate-600 cursor-pointer flex items-center justify-between">
               <span>Gemini API Configuration (Optional)</span>

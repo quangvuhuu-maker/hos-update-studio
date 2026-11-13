@@ -476,6 +476,9 @@ export function renderNewsletterEmailHtml({
   theme,
   showBanner = true,
   formatBirthdayFirstLast = false,
+  footerOrg = 'Concordia International School Hanoi',
+  footerAddress = 'Van Tri Golf Compound, Tho Da, Kim No, Dong Anh, Hanoi, Vietnam',
+  footerNote = 'Faculty & Staff Bulletin',
 }) {
   const bannerHtml = showBanner
     ? `
@@ -567,11 +570,15 @@ export function renderNewsletterEmailHtml({
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td>
-            <strong style="color: ${theme.textMain}; font-weight: 600;">Concordia International School Hanoi</strong><br/>
-            Van Tri Golf Estate, Kim No, Dong Anh, Hanoi, Vietnam
+            ${
+              footerOrg
+                ? `<strong style="color: ${theme.textMain}; font-weight: 600;">${footerOrg}</strong><br/>`
+                : ''
+            }
+            ${footerAddress ? footerAddress.replace(/\n/g, '<br/>') : ''}
           </td>
           <td align="right" style="vertical-align: bottom; color: ${theme.textMuted};">
-            Faculty &amp; Staff Bulletin
+            ${footerNote || ''}
           </td>
         </tr>
       </table>

@@ -19,12 +19,24 @@ const STORAGE_KEYS = {
   THEME_ID: 'hos_studio_theme_id_v1',
   BDAY_FIRST_LAST: 'hos_studio_bday_format_v1',
   GEMINI_KEY: 'hos_studio_gemini_key_v1',
+  FOOTER_ORG: 'hos_studio_footer_org_v1',
+  FOOTER_ADDRESS: 'hos_studio_footer_address_v1',
+  FOOTER_NOTE: 'hos_studio_footer_note_v1',
 };
 
 const state = {
   newsletterTitle: '',
   subtitle: 'Office of the Head of School',
   introNote: '',
+  footerOrg:
+    localStorage.getItem(STORAGE_KEYS.FOOTER_ORG) ??
+    'Concordia International School Hanoi',
+  footerAddress:
+    localStorage.getItem(STORAGE_KEYS.FOOTER_ADDRESS) ??
+    'Van Tri Golf Compound, Tho Da, Kim No, Dong Anh, Hanoi, Vietnam',
+  footerNote:
+    localStorage.getItem(STORAGE_KEYS.FOOTER_NOTE) ??
+    'Faculty & Staff Bulletin',
   blocks: [],
   categoryOrder: loadSavedCategoryOrder(),
   pinArchiveBottom: localStorage.getItem(STORAGE_KEYS.PIN_ARCHIVE) !== 'false',
@@ -1025,6 +1037,9 @@ function renderPreview() {
     theme: getActiveTheme(),
     showBanner: state.showBanner,
     formatBirthdayFirstLast: state.formatBirthdayFirstLast,
+    footerOrg: state.footerOrg,
+    footerAddress: state.footerAddress,
+    footerNote: state.footerNote,
   });
 
   previewContainer.innerHTML = emailHtml;
@@ -1156,6 +1171,18 @@ function renderAll() {
   if (introInput && introInput.value !== state.introNote) {
     introInput.value = state.introNote;
   }
+  const footerOrgInput = document.getElementById('input-footer-org');
+  if (footerOrgInput && footerOrgInput.value !== state.footerOrg) {
+    footerOrgInput.value = state.footerOrg;
+  }
+  const footerAddressInput = document.getElementById('input-footer-address');
+  if (footerAddressInput && footerAddressInput.value !== state.footerAddress) {
+    footerAddressInput.value = state.footerAddress;
+  }
+  const footerNoteInput = document.getElementById('input-footer-note');
+  if (footerNoteInput && footerNoteInput.value !== state.footerNote) {
+    footerNoteInput.value = state.footerNote;
+  }
   renderThemeBar();
   renderBlocksList();
   renderPreview();
@@ -1214,6 +1241,9 @@ export async function copyRawHtmlCode() {
     theme: getActiveTheme(),
     showBanner: state.showBanner,
     formatBirthdayFirstLast: state.formatBirthdayFirstLast,
+    footerOrg: state.footerOrg,
+    footerAddress: state.footerAddress,
+    footerNote: state.footerNote,
   });
   await navigator.clipboard.writeText(emailHtml);
   showToast('Copied HTML source code to clipboard.');
@@ -1256,6 +1286,36 @@ export function initApp() {
     bdayToggle.addEventListener('change', (e) => {
       state.formatBirthdayFirstLast = e.target.checked;
       localStorage.setItem(STORAGE_KEYS.BDAY_FIRST_LAST, String(state.formatBirthdayFirstLast));
+      renderPreview();
+    });
+  }
+
+  const footerOrgInput = document.getElementById('input-footer-org');
+  if (footerOrgInput) {
+    footerOrgInput.value = state.footerOrg;
+    footerOrgInput.addEventListener('input', (e) => {
+      state.footerOrg = e.target.value;
+      localStorage.setItem(STORAGE_KEYS.FOOTER_ORG, state.footerOrg);
+      renderPreview();
+    });
+  }
+
+  const footerAddressInput = document.getElementById('input-footer-address');
+  if (footerAddressInput) {
+    footerAddressInput.value = state.footerAddress;
+    footerAddressInput.addEventListener('input', (e) => {
+      state.footerAddress = e.target.value;
+      localStorage.setItem(STORAGE_KEYS.FOOTER_ADDRESS, state.footerAddress);
+      renderPreview();
+    });
+  }
+
+  const footerNoteInput = document.getElementById('input-footer-note');
+  if (footerNoteInput) {
+    footerNoteInput.value = state.footerNote;
+    footerNoteInput.addEventListener('input', (e) => {
+      state.footerNote = e.target.value;
+      localStorage.setItem(STORAGE_KEYS.FOOTER_NOTE, state.footerNote);
       renderPreview();
     });
   }
