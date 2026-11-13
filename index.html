@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,6 +33,7 @@
         opacity: 0;
         transform: translateY(4px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -53,11 +55,13 @@
       body {
         background: #ffffff !important;
       }
+
       #studio-app-shell,
       #toast-container,
       dialog {
         display: none !important;
       }
+
       #print-only-mount {
         display: block !important;
         width: 100% !important;
@@ -67,6 +71,7 @@
     }
   </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
   <div id="print-only-mount"></div>
   <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
@@ -85,7 +90,8 @@
               <h1 class="text-sm font-semibold tracking-tight text-slate-900">
                 HOS Update Editorial Studio
               </h1>
-              <span class="text-[10px] font-medium uppercase tracking-widest px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+              <span
+                class="text-[10px] font-medium uppercase tracking-widest px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                 Concordia Hanoi
               </span>
             </div>
@@ -94,28 +100,19 @@
 
         <!-- Center Controls -->
         <div class="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            id="btn-open-paste-modal"
-            class="px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition cursor-pointer"
-          >
+          <button type="button" id="btn-open-paste-modal"
+            class="px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition cursor-pointer">
             Paste Google Doc / Import .docx
           </button>
 
-          <button
-            type="button"
-            id="btn-open-priority-modal"
-            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
-          >
+          <button type="button" id="btn-open-priority-modal"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer">
             Priority Rules
           </button>
 
-          <button
-            type="button"
-            id="btn-header-fullview"
+          <button type="button" id="btn-header-fullview"
             class="px-3.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-medium text-xs transition cursor-pointer"
-            title="Toggle full-screen preview mode (Esc to exit)"
-          >
+            title="Toggle full-screen preview mode (Esc to exit)">
             View Full
           </button>
 
@@ -123,18 +120,12 @@
 
           <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded border border-slate-200">
             <span class="text-[11px] text-slate-500 px-2">Issue:</span>
-            <button
-              type="button"
-              id="btn-sample-nov"
-              class="px-2.5 py-1 rounded-xs text-xs font-medium bg-white text-slate-800 shadow-2xs transition cursor-pointer"
-            >
+            <button type="button" id="btn-sample-nov"
+              class="px-2.5 py-1 rounded-xs text-xs font-medium bg-white text-slate-800 shadow-2xs transition cursor-pointer">
               Nov 10, 2026
             </button>
-            <button
-              type="button"
-              id="btn-sample-sep"
-              class="px-2.5 py-1 rounded-xs text-xs font-medium text-slate-600 hover:text-slate-900 transition cursor-pointer"
-            >
+            <button type="button" id="btn-sample-sep"
+              class="px-2.5 py-1 rounded-xs text-xs font-medium text-slate-600 hover:text-slate-900 transition cursor-pointer">
               Sept 2026
             </button>
           </div>
@@ -142,25 +133,16 @@
 
         <!-- Export Controls -->
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            id="btn-copy-email"
-            class="px-4 py-1.5 rounded bg-[#005a34] hover:bg-[#004528] text-white font-medium text-xs transition cursor-pointer"
-          >
+          <button type="button" id="btn-copy-email"
+            class="px-4 py-1.5 rounded bg-[#005a34] hover:bg-[#004528] text-white font-medium text-xs transition cursor-pointer">
             Copy for Email (Gmail / Outlook)
           </button>
-          <button
-            type="button"
-            id="btn-copy-html"
-            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
-          >
+          <button type="button" id="btn-copy-html"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer">
             Copy HTML
           </button>
-          <button
-            type="button"
-            id="btn-print-pdf"
-            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer"
-          >
+          <button type="button" id="btn-print-pdf"
+            class="px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs transition cursor-pointer">
             Print / PDF
           </button>
         </div>
@@ -191,7 +173,8 @@
                 <input type="checkbox" id="toggle-concordia-banner" checked class="accent-[#005a34]" />
                 <span>Banner</span>
               </label>
-              <label class="flex items-center gap-1.5 cursor-pointer text-slate-600" title="Display names as 'First Last' instead of 'Last, First'">
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-600"
+                title="Display names as 'First Last' instead of 'Last, First'">
                 <input type="checkbox" id="toggle-birthday-format" class="accent-[#005a34]" />
                 <span>First Last</span>
               </label>
@@ -202,12 +185,9 @@
             <label for="input-newsletter-title" class="block text-xs font-medium text-slate-600 mb-1">
               Publication Title
             </label>
-            <input
-              type="text"
-              id="input-newsletter-title"
+            <input type="text" id="input-newsletter-title"
               class="w-full px-3 py-1.5 text-sm font-medium text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-              placeholder="HOS Monthly Update - November 10, 2026"
-            />
+              placeholder="HOS Monthly Update - November 10, 2026" />
           </div>
 
           <div>
@@ -215,25 +195,21 @@
               <label for="input-intro-note" class="text-xs font-medium text-slate-600">
                 Head of School Opening Note (Optional)
               </label>
-              <button
-                type="button"
-                id="btn-ai-generate-intro"
-                class="text-[11px] font-medium text-[#005a34] hover:underline cursor-pointer"
-              >
+              <button type="button" id="btn-ai-generate-intro"
+                class="text-[11px] font-medium text-[#005a34] hover:underline cursor-pointer">
                 Draft with AI
               </button>
             </div>
-            <textarea
-              id="input-intro-note"
-              rows="2"
+            <textarea id="input-intro-note" rows="2"
               class="w-full px-3 py-1.5 text-xs text-slate-800 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-              placeholder="Optional introductory paragraph from the Head of School..."
-            ></textarea>
+              placeholder="Optional introductory paragraph from the Head of School..."></textarea>
           </div>
 
           <!-- Footer & Colophon Settings -->
-          <details class="group bg-slate-50 border border-slate-200 rounded px-3 py-2" id="details-footer-settings" open>
-            <summary class="text-xs font-semibold text-slate-700 cursor-pointer flex items-center justify-between select-none">
+          <details class="group bg-slate-50 border border-slate-200 rounded px-3 py-2" id="details-footer-settings"
+            open>
+            <summary
+              class="text-xs font-semibold text-slate-700 cursor-pointer flex items-center justify-between select-none">
               <span class="flex items-center gap-1.5">
                 <span>📍</span>
                 <span>Footer &amp; Address Information</span>
@@ -245,34 +221,25 @@
                 <label for="input-footer-org" class="block text-[11px] font-medium text-slate-600 mb-0.5">
                   School / Organization Name
                 </label>
-                <input
-                  type="text"
-                  id="input-footer-org"
+                <input type="text" id="input-footer-org"
                   class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-                  placeholder="Concordia International School Hanoi"
-                />
+                  placeholder="Concordia International School Hanoi" />
               </div>
               <div>
                 <label for="input-footer-address" class="block text-[11px] font-medium text-slate-600 mb-0.5">
-                  Campus Address (Địa chỉ trường - hỗ trợ nhiều dòng)
+                  Campus Address (Support multiple lines)
                 </label>
-                <textarea
-                  id="input-footer-address"
-                  rows="2"
+                <textarea id="input-footer-address" rows="2"
                   class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-                  placeholder="Van Tri Golf Compound, Tho Da, Kim No, Dong Anh, Hanoi, Vietnam"
-                ></textarea>
+                  placeholder="Van Tri Golf Compound, Tho Da, Kim No, Dong Anh, Hanoi, Vietnam"></textarea>
               </div>
               <div>
                 <label for="input-footer-note" class="block text-[11px] font-medium text-slate-600 mb-0.5">
                   Footer Right Tagline
                 </label>
-                <input
-                  type="text"
-                  id="input-footer-note"
+                <input type="text" id="input-footer-note"
                   class="w-full px-2.5 py-1 text-xs text-slate-900 bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-                  placeholder="Faculty &amp; Staff Bulletin"
-                />
+                  placeholder="Faculty &amp; Staff Bulletin" />
               </div>
             </div>
           </details>
@@ -284,17 +251,10 @@
             </summary>
             <div class="mt-2.5 pt-2 border-t border-slate-200 space-y-2">
               <div class="flex items-center gap-2">
-                <input
-                  type="password"
-                  id="input-gemini-key"
-                  placeholder="Gemini API Key (AIza...)"
-                  class="flex-1 px-2.5 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]"
-                />
-                <button
-                  type="button"
-                  id="btn-ai-smart-classify"
-                  class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded cursor-pointer shrink-0"
-                >
+                <input type="password" id="input-gemini-key" placeholder="Gemini API Key (AIza...)"
+                  class="flex-1 px-2.5 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-[#005a34]" />
+                <button type="button" id="btn-ai-smart-classify"
+                  class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded cursor-pointer shrink-0">
                   AI Classify
                 </button>
               </div>
@@ -309,27 +269,19 @@
               <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
                 Editorial Outline (Priority Order)
               </h2>
-              <span
-                id="blocks-count-badge"
-                class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600"
-              >
+              <span id="blocks-count-badge"
+                class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600">
                 0 sections
               </span>
             </div>
 
             <div class="flex items-center gap-1.5">
-              <button
-                type="button"
-                id="btn-resort-priority"
-                class="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition cursor-pointer"
-              >
+              <button type="button" id="btn-resort-priority"
+                class="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition cursor-pointer">
                 Re-sort by Priority
               </button>
-              <button
-                type="button"
-                id="btn-add-block"
-                class="px-2.5 py-1 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded transition cursor-pointer"
-              >
+              <button type="button" id="btn-add-block"
+                class="px-2.5 py-1 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded transition cursor-pointer">
                 + Add Section
               </button>
             </div>
@@ -340,18 +292,15 @@
       </aside>
 
       <!-- Right Column: Live Publication Preview -->
-      <section id="preview-main-col" class="lg:col-span-7 flex flex-col bg-slate-100 rounded-xl border border-slate-200/90 overflow-hidden">
+      <section id="preview-main-col"
+        class="lg:col-span-7 flex flex-col bg-slate-100 rounded-xl border border-slate-200/90 overflow-hidden">
         <!-- Full View Exit Banner (shown only when Full View is active) -->
-        <div
-          id="fullview-exit-bar"
-          class="hidden bg-slate-900 text-white px-4 py-2 flex items-center justify-between text-xs"
-        >
-          <span>Full-Screen Reading Mode Active — Press <strong>Esc</strong> at any time to return to Split Editor.</span>
-          <button
-            type="button"
-            id="btn-exit-fullview"
-            class="px-3 py-1 rounded bg-white text-slate-900 font-semibold hover:bg-slate-100 cursor-pointer"
-          >
+        <div id="fullview-exit-bar"
+          class="hidden bg-slate-900 text-white px-4 py-2 flex items-center justify-between text-xs">
+          <span>Full-Screen Reading Mode Active — Press <strong>Esc</strong> at any time to return to Split
+            Editor.</span>
+          <button type="button" id="btn-exit-fullview"
+            class="px-3 py-1 rounded bg-white text-slate-900 font-semibold hover:bg-slate-100 cursor-pointer">
             Return to Split Editor
           </button>
         </div>
@@ -362,32 +311,20 @@
           </span>
 
           <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded">
-            <button
-              type="button"
-              data-preview-mode="desktop"
-              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all bg-slate-900 text-white"
-            >
+            <button type="button" data-preview-mode="desktop"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all bg-slate-900 text-white">
               Split View
             </button>
-            <button
-              type="button"
-              data-preview-mode="full"
-              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
-            >
+            <button type="button" data-preview-mode="full"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200">
               Full View
             </button>
-            <button
-              type="button"
-              data-preview-mode="mobile"
-              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
-            >
+            <button type="button" data-preview-mode="mobile"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200">
               Mobile (420px)
             </button>
-            <button
-              type="button"
-              data-preview-mode="html"
-              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200"
-            >
+            <button type="button" data-preview-mode="html"
+              class="px-3 py-1 text-xs font-medium rounded cursor-pointer transition-all text-slate-600 hover:bg-slate-200">
               HTML Source
             </button>
           </div>
@@ -399,12 +336,8 @@
           </div>
 
           <div id="preview-code-wrapper" class="hidden w-full max-w-[720px]">
-            <textarea
-              id="newsletter-html-code"
-              readonly
-              rows="32"
-              class="w-full p-4 font-mono text-xs bg-slate-900 text-emerald-300 rounded-lg border border-slate-700 focus:outline-none"
-            ></textarea>
+            <textarea id="newsletter-html-code" readonly rows="32"
+              class="w-full p-4 font-mono text-xs bg-slate-900 text-emerald-300 rounded-lg border border-slate-700 focus:outline-none"></textarea>
           </div>
         </div>
       </section>
@@ -412,10 +345,8 @@
   </div>
 
   <!-- MODAL 1: Paste / Upload -->
-  <dialog
-    id="dialog-paste-import"
-    class="w-full max-w-3xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden"
-  >
+  <dialog id="dialog-paste-import"
+    class="w-full max-w-3xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden">
     <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
       <div>
         <h3 class="text-sm font-semibold">Import Content from Google Docs or Word (.docx)</h3>
@@ -423,23 +354,22 @@
           Preserves links, tables, and structure while applying clean editorial typography.
         </p>
       </div>
-      <button
-        type="button"
-        id="btn-close-paste-modal"
+      <button type="button" id="btn-close-paste-modal"
         class="w-7 h-7 rounded bg-white/10 hover:bg-white/20 text-white text-xs cursor-pointer"
-        aria-label="Close modal"
-      >
+        aria-label="Close modal">
         &times;
       </button>
     </div>
 
     <div class="p-6 space-y-4 bg-white">
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-lg p-3.5">
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-lg p-3.5">
         <div class="text-xs text-slate-700">
           <strong>Option A — Upload .docx file exported from Google Docs:</strong>
           <div class="text-slate-500 mt-0.5">Extracts all paragraphs, tables, and hyperlinks directly.</div>
         </div>
-        <label class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded cursor-pointer shrink-0">
+        <label
+          class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded cursor-pointer shrink-0">
           Select .docx File
           <input type="file" id="input-upload-docx" accept=".docx" class="hidden" />
         </label>
@@ -452,27 +382,19 @@
           </label>
           <span class="text-[11px] text-slate-400">Rich Text Clipboard</span>
         </div>
-        <div
-          id="rich-paste-editor"
-          contenteditable="true"
+        <div id="rich-paste-editor" contenteditable="true"
           data-placeholder="Click here and press Cmd + V to paste your HOS Monthly Update..."
-          class="w-full h-72 overflow-y-auto p-4 bg-slate-50 border border-slate-300 focus:border-[#005a34] focus:bg-white rounded-lg text-sm text-slate-800 focus:outline-none"
-        ></div>
+          class="w-full h-72 overflow-y-auto p-4 bg-slate-50 border border-slate-300 focus:border-[#005a34] focus:bg-white rounded-lg text-sm text-slate-800 focus:outline-none">
+        </div>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-        <button
-          type="button"
-          onclick="document.getElementById('dialog-paste-import').close()"
-          class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-100 cursor-pointer"
-        >
+        <button type="button" onclick="document.getElementById('dialog-paste-import').close()"
+          class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">
           Cancel
         </button>
-        <button
-          type="button"
-          id="btn-parse-pasted-content"
-          class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer"
-        >
+        <button type="button" id="btn-parse-pasted-content"
+          class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer">
           Parse &amp; Arrange by Priority
         </button>
       </div>
@@ -480,10 +402,8 @@
   </dialog>
 
   <!-- MODAL 2: Priority Rules -->
-  <dialog
-    id="dialog-priority-settings"
-    class="w-full max-w-2xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden"
-  >
+  <dialog id="dialog-priority-settings"
+    class="w-full max-w-2xl rounded-xl border border-slate-200 shadow-2xl p-0 overflow-hidden">
     <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
       <div>
         <h3 class="text-sm font-semibold">Priority Hierarchy Settings</h3>
@@ -491,12 +411,9 @@
           Drag or reorder the default priority sequence for parsed sections.
         </p>
       </div>
-      <button
-        type="button"
-        id="btn-close-priority-modal"
+      <button type="button" id="btn-close-priority-modal"
         class="w-7 h-7 rounded bg-white/10 hover:bg-white/20 text-white text-xs cursor-pointer"
-        aria-label="Close priority settings"
-      >
+        aria-label="Close priority settings">
         &times;
       </button>
     </div>
@@ -507,32 +424,24 @@
       <div class="bg-white border border-slate-200 rounded-lg p-3.5 flex items-center justify-between">
         <div>
           <div class="text-xs font-semibold text-slate-800">Always Pin "HOS Update Archive" at Bottom</div>
-          <div class="text-[11px] text-slate-500">Keeps historical issue links at the colophon footer of the update.</div>
+          <div class="text-[11px] text-slate-500">Keeps historical issue links at the colophon footer of the update.
+          </div>
         </div>
         <input type="checkbox" id="checkbox-pin-archive" checked class="w-4 h-4 accent-[#005a34] cursor-pointer" />
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-slate-200">
-        <button
-          type="button"
-          id="btn-reset-priority-defaults"
-          class="px-3 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-        >
+        <button type="button" id="btn-reset-priority-defaults"
+          class="px-3 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer">
           Reset to Default
         </button>
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            onclick="document.getElementById('dialog-priority-settings').close()"
-            class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer"
-          >
+          <button type="button" onclick="document.getElementById('dialog-priority-settings').close()"
+            class="px-4 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-200 cursor-pointer">
             Cancel
           </button>
-          <button
-            type="button"
-            id="btn-save-priority-settings"
-            class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer"
-          >
+          <button type="button" id="btn-save-priority-settings"
+            class="px-5 py-1.5 rounded text-xs font-medium bg-[#005a34] hover:bg-[#004528] text-white cursor-pointer">
             Save &amp; Apply Order
           </button>
         </div>
@@ -545,4 +454,5 @@
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
+
 </html>
